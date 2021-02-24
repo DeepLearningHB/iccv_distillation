@@ -430,17 +430,29 @@ for a, b, c in combi_list:
             prev_activation = None
             prev_activation_t = None
 
-            for idx_, (conv, fs, ft) in enumerate(zip(conv_distiller[1:], feat_s[1:], feat_t[1:])):
+#             for idx_, (conv, fs, ft) in enumerate(zip(conv_distiller[1:], feat_s[1:], feat_t[1:])):
+#                 conv_logit_t, conv_feature_t = conv(ft.detach())
+#                 conv_logit_s, conv_feature_s = conv(fs)
+#                 if idx_ != 0 and idx_ != len(conv_distiller) - 1:
+#                     loss_3 += torch.dist(prev_activation, conv_logit_s.detach()) * 0.05
+#                 elif idx_ == len(conv_distiller) - 1:
+#                     loss_3 += criterion_AB(conv_logit_s, conv_logit_t.detach())
+#                 loss_1 += F.kl_div(F.log_softmax(conv_logit_t / kd_T, dim=1), F.softmax(logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_t.size(0)
+#                 loss_2 += F.kl_div(F.log_softmax(conv_logit_s / kd_T, dim=1), F.softmax(conv_logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_s.size(0)
+#                 loss_4 += criterion_CE(conv_logit_s, target)
+#                 prev_activation = conv_logit_s
+#                 cc += 1
+            for idx_, (conv, fs, ft) in enumerate(zip(conv_distiller, feat_s, feat_t)):
                 conv_logit_t, conv_feature_t = conv(ft.detach())
                 conv_logit_s, conv_feature_s = conv(fs)
                 if idx_ != 0 and idx_ != len(conv_distiller) - 1:
-                    loss_3 += torch.dist(prev_activation, conv_logit_s.detach()) * 0.05
+                    loss_3 += torch.dist(prev_activation, conv_feature_s.detach()) * 0.05
                 elif idx_ == len(conv_distiller) - 1:
-                    loss_3 += criterion_AB(conv_logit_s, conv_logit_t.detach())
-                loss_1 += F.kl_div(F.log_softmax(conv_logit_t / kd_T, dim=1), F.softmax(logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_t.size(0)
-                loss_2 += F.kl_div(F.log_softmax(conv_logit_s / kd_T, dim=1), F.softmax(conv_logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_s.size(0)
+                    loss_3 += criterion_AB(conv_feature_s, conv_feature_t.detach())
+                loss_1 += 0.5 * F.kl_div(F.log_softmax(conv_logit_t / kd_T, dim=1), F.softmax(logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_t.size(0)
+                loss_2 += 2 * F.kl_div(F.log_softmax(conv_logit_s / kd_T, dim=1), F.softmax(conv_logit_t.detach() / kd_T, dim=1), size_average=False) * (kd_T ** 2) / conv_logit_s.size(0)
                 loss_4 += criterion_CE(conv_logit_s, target)
-                prev_activation = conv_logit_s
+                prev_activation = conv_feature_s
                 cc += 1
 
 #             for idx_, (conv, fs, ft) in enumerate(zip(conv_distiller, feat_s, feat_t)):
