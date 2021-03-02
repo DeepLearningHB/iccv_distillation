@@ -1,0 +1,51 @@
+Namespace(balance=0.2, cuda_visible_devices=3, model_s='resnet20', model_t='resnet110', path_t='./save/models/resnet110_best.pth', temp=3.0, trial=0)
+Files already downloaded and verified
+Files already downloaded and verified
+1 feature: torch.Size([1, 16, 32, 32])
+2 feature: torch.Size([1, 16, 32, 32])
+3 feature: torch.Size([1, 32, 16, 16])
+4 feature: torch.Size([1, 64, 8, 8])
+5 feature: torch.Size([1, 64])
+final feature: torch.Size([1, 100])
+Epoch: 1, [Train]* Acc@1 8.754 Acc@5 28.638 Acc_Ensemble@1 9.696 Acc_Ensemble@5 30.376 Acc_Ensemble_Sub@1 9.586 Acc_Ensemble_Sub@5 30.206
+ConvDistiller: 14.2558, InterFeature: 5.8183, Conv_FM: 0.0328, Feature_CE: 3.1422 Loss(simple): 5.6730 CE: 3.9668 FM: 3.7392
+ * Acc@1 14.690 Acc@5 41.570 Acc_Ensemble@1 15.110 Acc_Ensemble@5 42.300 Acc_Sub_Ensemble@1 14.260 Acc_Sub_Ensemble@5 40.100 Acc_Sub2_Ensemble@1 14.330 Acc_Sub2_Ensemble@5 40.600 Best_accuracy 14.6900 Best_Ensemble_accuarcy 15.1100
+ * Aux 1 Acc1@ 10.670	Aux 2 Acc1@ 11.280	Aux 3 Acc1@ 13.170	Aux 4 Acc1@ 14.090	Aux 5 Acc1@ 14.140	Final Acc1@ 14.690	Ensemble Acc1@ 15.110	Ensemble Sub Acc1@ 14.260	Ensemble Sub2 Acc1@ 14.330
+/home/anaconda/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Epoch: 2, [Train]* Acc@1 20.910 Acc@5 52.092 Acc_Ensemble@1 22.922 Acc_Ensemble@5 54.398 Acc_Ensemble_Sub@1 22.678 Acc_Ensemble_Sub@5 53.896
+ConvDistiller: 13.7192, InterFeature: 5.6664, Conv_FM: 0.0327, Feature_CE: 2.5422 Loss(simple): 6.8535 CE: 3.2109 FM: 3.6618
+ * Acc@1 24.410 Acc@5 56.320 Acc_Ensemble@1 26.650 Acc_Ensemble@5 59.180 Acc_Sub_Ensemble@1 25.190 Acc_Sub_Ensemble@5 58.110 Acc_Sub2_Ensemble@1 23.990 Acc_Sub2_Ensemble@5 55.720 Best_accuracy 24.4100 Best_Ensemble_accuarcy 26.6500
+ * Aux 1 Acc1@ 18.700	Aux 2 Acc1@ 21.790	Aux 3 Acc1@ 24.100	Aux 4 Acc1@ 22.810	Aux 5 Acc1@ 24.900	Final Acc1@ 24.410	Ensemble Acc1@ 26.650	Ensemble Sub Acc1@ 25.190	Ensemble Sub2 Acc1@ 23.990
+Epoch: 3, [Train]* Acc@1 30.838 Acc@5 65.202 Acc_Ensemble@1 33.018 Acc_Ensemble@5 66.872 Acc_Ensemble_Sub@1 32.648 Acc_Ensemble_Sub@5 66.402
+ConvDistiller: 13.3771, InterFeature: 5.5496, Conv_FM: 0.0330, Feature_CE: 2.1709 Loss(simple): 5.7719 CE: 2.7296 FM: 3.4817
+ * Acc@1 30.280 Acc@5 64.230 Acc_Ensemble@1 33.180 Acc_Ensemble@5 67.330 Acc_Sub_Ensemble@1 32.720 Acc_Sub_Ensemble@5 66.420 Acc_Sub2_Ensemble@1 30.230 Acc_Sub2_Ensemble@5 64.450 Best_accuracy 30.2800 Best_Ensemble_accuarcy 33.1800
+ * Aux 1 Acc1@ 28.080	Aux 2 Acc1@ 29.170	Aux 3 Acc1@ 29.660	Aux 4 Acc1@ 29.110	Aux 5 Acc1@ 30.470	Final Acc1@ 30.280	Ensemble Acc1@ 33.180	Ensemble Sub Acc1@ 32.720	Ensemble Sub2 Acc1@ 30.230
+Epoch: 4, [Train]* Acc@1 38.540 Acc@5 72.918 Acc_Ensemble@1 41.108 Acc_Ensemble@5 74.768 Acc_Ensemble_Sub@1 40.676 Acc_Ensemble_Sub@5 74.212
+ConvDistiller: 13.1386, InterFeature: 5.4513, Conv_FM: 0.0335, Feature_CE: 1.9108 Loss(simple): 5.0005 CE: 2.3679 FM: 3.3040
+ * Acc@1 32.100 Acc@5 64.050 Acc_Ensemble@1 37.610 Acc_Ensemble@5 71.460 Acc_Sub_Ensemble@1 39.010 Acc_Sub_Ensemble@5 73.290 Acc_Sub2_Ensemble@1 31.170 Acc_Sub2_Ensemble@5 63.260 Best_accuracy 32.1000 Best_Ensemble_accuarcy 37.6100
+ * Aux 1 Acc1@ 34.880	Aux 2 Acc1@ 33.900	Aux 3 Acc1@ 31.500	Aux 4 Acc1@ 30.390	Aux 5 Acc1@ 31.330	Final Acc1@ 32.100	Ensemble Acc1@ 37.610	Ensemble Sub Acc1@ 39.010	Ensemble Sub2 Acc1@ 31.170
+Epoch: 5, [Train]* Acc@1 43.838 Acc@5 77.242 Acc_Ensemble@1 46.226 Acc_Ensemble@5 79.068 Acc_Ensemble_Sub@1 45.660 Acc_Ensemble_Sub@5 78.558
+ConvDistiller: 12.9869, InterFeature: 5.3830, Conv_FM: 0.0336, Feature_CE: 1.7443 Loss(simple): 4.4646 CE: 2.1458 FM: 3.1692
+ * Acc@1 40.840 Acc@5 74.660 Acc_Ensemble@1 45.690 Acc_Ensemble@5 78.270 Acc_Sub_Ensemble@1 44.270 Acc_Sub_Ensemble@5 76.750 Acc_Sub2_Ensemble@1 41.440 Acc_Sub2_Ensemble@5 75.520 Best_accuracy 40.8400 Best_Ensemble_accuarcy 45.6900
+ * Aux 1 Acc1@ 37.690	Aux 2 Acc1@ 37.610	Aux 3 Acc1@ 40.650	Aux 4 Acc1@ 40.730	Aux 5 Acc1@ 41.290	Final Acc1@ 40.840	Ensemble Acc1@ 45.690	Ensemble Sub Acc1@ 44.270	Ensemble Sub2 Acc1@ 41.440
+Epoch: 6, [Train]* Acc@1 47.128 Acc@5 80.120 Acc_Ensemble@1 50.028 Acc_Ensemble@5 82.166 Acc_Ensemble_Sub@1 49.576 Acc_Ensemble_Sub@5 81.506
+ConvDistiller: 12.8746, InterFeature: 5.3353, Conv_FM: 0.0339, Feature_CE: 1.6286 Loss(simple): 4.1111 CE: 1.9968 FM: 3.0531
+ * Acc@1 45.360 Acc@5 76.690 Acc_Ensemble@1 48.410 Acc_Ensemble@5 80.330 Acc_Sub_Ensemble@1 46.070 Acc_Sub_Ensemble@5 78.750 Acc_Sub2_Ensemble@1 45.390 Acc_Sub2_Ensemble@5 77.250 Best_accuracy 45.3600 Best_Ensemble_accuarcy 48.4100
+ * Aux 1 Acc1@ 35.210	Aux 2 Acc1@ 41.020	Aux 3 Acc1@ 43.780	Aux 4 Acc1@ 44.210	Aux 5 Acc1@ 45.650	Final Acc1@ 45.360	Ensemble Acc1@ 48.410	Ensemble Sub Acc1@ 46.070	Ensemble Sub2 Acc1@ 45.390
+Epoch: 7, [Train]* Acc@1 49.654 Acc@5 81.988 Acc_Ensemble@1 52.642 Acc_Ensemble@5 83.872 Acc_Ensemble_Sub@1 52.120 Acc_Ensemble_Sub@5 83.368
+ConvDistiller: 12.7914, InterFeature: 5.2982, Conv_FM: 0.0338, Feature_CE: 1.5411 Loss(simple): 3.8433 CE: 1.8841 FM: 2.9774
+ * Acc@1 47.010 Acc@5 79.080 Acc_Ensemble@1 51.370 Acc_Ensemble@5 81.810 Acc_Sub_Ensemble@1 48.630 Acc_Sub_Ensemble@5 79.960 Acc_Sub2_Ensemble@1 47.550 Acc_Sub2_Ensemble@5 79.360 Best_accuracy 47.0100 Best_Ensemble_accuarcy 51.3700
+ * Aux 1 Acc1@ 39.000	Aux 2 Acc1@ 41.850	Aux 3 Acc1@ 43.970	Aux 4 Acc1@ 47.460	Aux 5 Acc1@ 47.080	Final Acc1@ 47.010	Ensemble Acc1@ 51.370	Ensemble Sub Acc1@ 48.630	Ensemble Sub2 Acc1@ 47.550
+Epoch: 8, [Train]* Acc@1 51.954 Acc@5 83.572 Acc_Ensemble@1 55.144 Acc_Ensemble@5 85.520 Acc_Ensemble_Sub@1 54.496 Acc_Ensemble_Sub@5 84.810
+ConvDistiller: 12.7275, InterFeature: 5.2693, Conv_FM: 0.0338, Feature_CE: 1.4716 Loss(simple): 3.6389 CE: 1.7915 FM: 2.9030
+ * Acc@1 45.940 Acc@5 77.160 Acc_Ensemble@1 50.080 Acc_Ensemble@5 81.250 Acc_Sub_Ensemble@1 48.020 Acc_Sub_Ensemble@5 80.010 Acc_Sub2_Ensemble@1 45.660 Acc_Sub2_Ensemble@5 77.150 Best_accuracy 47.0100 Best_Ensemble_accuarcy 51.3700
+ * Aux 1 Acc1@ 38.010	Aux 2 Acc1@ 43.410	Aux 3 Acc1@ 43.490	Aux 4 Acc1@ 44.670	Aux 5 Acc1@ 46.010	Final Acc1@ 45.940	Ensemble Acc1@ 50.080	Ensemble Sub Acc1@ 48.020	Ensemble Sub2 Acc1@ 45.660
+Epoch: 9, [Train]* Acc@1 53.554 Acc@5 84.254 Acc_Ensemble@1 56.860 Acc_Ensemble@5 86.364 Acc_Ensemble_Sub@1 56.250 Acc_Ensemble_Sub@5 85.794
+ConvDistiller: 12.6778, InterFeature: 5.2452, Conv_FM: 0.0339, Feature_CE: 1.4214 Loss(simple): 3.4972 CE: 1.7278 FM: 2.8466
+ * Acc@1 48.220 Acc@5 79.210 Acc_Ensemble@1 51.080 Acc_Ensemble@5 81.790 Acc_Sub_Ensemble@1 48.770 Acc_Sub_Ensemble@5 80.120 Acc_Sub2_Ensemble@1 48.110 Acc_Sub2_Ensemble@5 79.460 Best_accuracy 48.2200 Best_Ensemble_accuarcy 51.3700
+ * Aux 1 Acc1@ 41.410	Aux 2 Acc1@ 39.750	Aux 3 Acc1@ 45.900	Aux 4 Acc1@ 47.110	Aux 5 Acc1@ 48.710	Final Acc1@ 48.220	Ensemble Acc1@ 51.080	Ensemble Sub Acc1@ 48.770	Ensemble Sub2 Acc1@ 48.110
+Epoch: 10, [Train]* Acc@1 55.184 Acc@5 85.312 Acc_Ensemble@1 58.284 Acc_Ensemble@5 87.336 Acc_Ensemble_Sub@1 57.762 Acc_Ensemble_Sub@5 86.930
+ConvDistiller: 12.6289, InterFeature: 5.2260, Conv_FM: 0.0339, Feature_CE: 1.3695 Loss(simple): 3.3540 CE: 1.6620 FM: 2.7942
+ * Acc@1 43.780 Acc@5 74.900 Acc_Ensemble@1 48.720 Acc_Ensemble@5 79.120 Acc_Sub_Ensemble@1 47.770 Acc_Sub_Ensemble@5 78.760 Acc_Sub2_Ensemble@1 43.630 Acc_Sub2_Ensemble@5 74.600 Best_accuracy 48.2200 Best_Ensemble_accuarcy 51.3700
+ * Aux 1 Acc1@ 43.220	Aux 2 Acc1@ 41.300	Aux 3 Acc1@ 41.400	Aux 4 Acc1@ 42.800	Aux 5 Acc1@ 43.800	Final Acc1@ 43.780	Ensemble Acc1@ 48.720	Ensemble Sub Acc1@ 47.770	Ensemble Sub2 Acc1@ 43.630
