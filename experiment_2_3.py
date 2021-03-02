@@ -346,13 +346,16 @@ for epoch in range(1, total_epoch+1):
             conv_logit_s, conv_feature_s = conv(fs)
             ensemble += conv_logit_s # ensemble
         
-            if idx_ != 0 or idx_ != 1:
+            if idx_ == 0:
                 # not final -1 and final -2
-                ensemble_sub += conv_logit_s
-                cc_sub1 += 1
-            else:
                 ensemble_sub2 += conv_logit_s
                 cc_sub2 += 1
+            elif idx == 1:
+                ensemble_sub2 += conv_logit_s
+                cc_sub2 += 1
+            else:
+                ensemble_sub += conv_logit_s
+                cc_sub1 += 1
 
             if idx_ == 0:
                 last_logit = conv_logit_s
@@ -445,10 +448,10 @@ for epoch in range(1, total_epoch+1):
         val_losses = AverageMeter()
         val_top1_ensemble = AverageMeter()
         val_top5_ensemble = AverageMeter()
-        val_top1_ensemble_sub = AverageMeter()
-        val_top5_ensemble_sub = AverageMeter()
-        val_top1_ensemble_sub2 = AverageMeter()
-        val_top5_ensemble_sub2 = AverageMeter()
+        val_top1_ensemble_sub_1 = AverageMeter()
+        val_top5_ensemble_sub_1 = AverageMeter()
+        val_top1_ensemble_sub_2 = AverageMeter()
+        val_top5_ensemble_sub_2 = AverageMeter()
         aux_classifier = [AverageMeter() for _ in range(len(trainable_models.conv_distiller))]
         for idx, (input, target) in enumerate(val_loader):
             input = input.float().cuda()
@@ -456,54 +459,56 @@ for epoch in range(1, total_epoch+1):
 
             val_feat_s, output = trainable_models.model_s(input, is_feat=True, preact=False)
             loss = criterion_CE(output, target)
-            simple_val_out_s = trainable_models.MLP(val_feat_s[-1])
             ensemble = torch.zeros(size=[input.size(0), n_cls]).cuda()
-            ensemble_sub = torch.zeros(size=[input.size(0), n_cls]).cuda()
-            ensemble_sub2 = torch.zeros(size=[input.size(0), n_cls]).cuda()
+            ensemble_sub_1 = torch.zeros(size=[input.size(0), n_cls]).cuda()
+            ensemble_sub_2 = torch.zeros(size=[input.size(0), n_cls]).cuda()
             # ensemble
             cc, cc_sub1, cc_sub2 = 0, 0, 0
-            for k, (conv, fs) in enumerate(zip(trainable_models.conv_distiller, val_feat_s)):
+            for k_idx, (conv, fs) in enumerate(zip(trainable_models.conv_distiller, val_feat_s)):
                 conv_logit_s, conv_feature_s = conv(fs)
                 ensemble += conv_logit_s # ensemble
                 
-                if k == len(val_feat_s)-1 or k == len(val_feat_s)-2:
-                    # final -1 and final -2
-                    ensemble_sub += conv_logit_s
-                    cc_sub1 += 1
-                else:
-                    ensemble_sub2 += conv_logit_s
+                if k_idx == len(val_feat_s)-1:
+                    # final and final-1
+                    ensemble_sub_2 += conv_logit_s.clone()
                     cc_sub2 += 1
+                elif k_idx == len(val_feat_s)-2:
+                    ensemble_sub_2 += conv_logit_s.clone()
+                    cc_sub2 += 1
+                else:
+                    ensemble_sub_1 += conv_logit_s.clone()
+                    cc_sub1 += 1
                 
-                aux_acc1, _ = accuracy(conv_logit_s, target, topk=(1,5))
-                aux_classifier[k].update(aux_acc1[0], input.size(0))
+                aux_acc1, _ = accuracy(conv_logit_s.clone(), target, topk=(1,5))
+                aux_classifier[k_idx].update(aux_acc1[0], input.size(0))
                 cc += 1
-                
-            ensemble /= cc # ensemble avg
-            ensemble_sub /= cc_sub1
-            ensemble_sub2 /= cc_sub2
+               
+            ensemble = ensemble / cc # ensemble avg
+            ensemble_sub_1 = ensemble_sub_1 / cc_sub1
+            ensemble_sub_2 = ensemble_sub_2 / cc_sub2
 
             val_acc_1, val_acc_5 = accuracy(output, target, topk=(1, 5))
             val_acc_1_ensemble, val_acc_5_ensemble = accuracy(ensemble, target, topk=(1, 5))
-            val_acc_1_ensemble_sub, val_acc_5_ensemble_sub = accuracy(ensemble_sub, target, topk=(1, 5))
-            val_acc_1_ensemble_sub2, val_acc_5_ensemble_sub2 = accuracy(ensemble_sub2, target, topk=(1, 5))
+            val_acc_1_ensemble_sub_1, val_acc_5_ensemble_sub_1 = accuracy(ensemble_sub_1, target, topk=(1, 5))
+            val_acc_1_ensemble_sub_2, val_acc_5_ensemble_sub_2 = accuracy(ensemble_sub_2, target, topk=(1, 5))
             val_top1.update(val_acc_1[0], input.size(0))
             val_top5.update(val_acc_5[0], input.size(0))
             val_top1_ensemble.update(val_acc_1_ensemble[0], input.size(0))
             val_top5_ensemble.update(val_acc_5_ensemble[0], input.size(0))
-            val_top1_ensemble_sub.update(val_acc_1_ensemble_sub[0], input.size(0))
-            val_top5_ensemble_sub.update(val_acc_5_ensemble_sub[0], input.size(0))
-            val_top1_ensemble_sub2.update(val_acc_1_ensemble_sub2[0], input.size(0))
-            val_top5_ensemble_sub2.update(val_acc_5_ensemble_sub2[0], input.size(0))
+            val_top1_ensemble_sub_1.update(val_acc_1_ensemble_sub_1[0], input.size(0))
+            val_top5_ensemble_sub_1.update(val_acc_5_ensemble_sub_1[0], input.size(0))
+            val_top1_ensemble_sub_2.update(val_acc_1_ensemble_sub_2[0], input.size(0))
+            val_top5_ensemble_sub_2.update(val_acc_5_ensemble_sub_2[0], input.size(0))
 
     if best_accuracy < val_top1.avg:
         best_accuracy = val_top1.avg
     best_ensemble_acc = max(best_ensemble_acc, val_top1_ensemble.avg)
     print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f} Acc_Ensemble@1 {top1_ens.avg:.3f} Acc_Ensemble@5 {top5_ens.avg:.3f} Acc_Sub_Ensemble@1 {top1_ens_sub.avg:.3f} Acc_Sub_Ensemble@5 {top5_ens_sub.avg:.3f} Acc_Sub2_Ensemble@1 {top1_ens_sub2.avg:.3f} Acc_Sub2_Ensemble@5 {top5_ens_sub2.avg:.3f} Best_accuracy %.4f Best_Ensemble_accuarcy %.4f'
-          .format(top1=val_top1, top5=val_top5, top1_ens=val_top1_ensemble, top5_ens=val_top5_ensemble, top1_ens_sub=val_top1_ensemble_sub, top5_ens_sub=val_top5_ensemble_sub, top1_ens_sub2=val_top1_ensemble_sub2, top5_ens_sub2=val_top5_ensemble_sub2) % (best_accuracy, best_ensemble_acc))
+          .format(top1=val_top1, top5=val_top5, top1_ens=val_top1_ensemble, top5_ens=val_top5_ensemble, top1_ens_sub=val_top1_ensemble_sub_1, top5_ens_sub=val_top5_ensemble_sub_1, top1_ens_sub2=val_top1_ensemble_sub_2, top5_ens_sub2=val_top5_ensemble_sub_2) % (best_accuracy, best_ensemble_acc))
     print(" * ", end='')
-    for k, score in enumerate(aux_classifier):
-        print("Aux {} Acc1@ {:.3f}".format(k+1, score.avg), end='\t')
+    for k_, score in enumerate(aux_classifier):
+        print("Aux {} Acc1@ {:.3f}".format(k_+1, score.avg), end='\t')
     print("Final Acc1@ {:.3f}".format(val_top1.avg), end='\t')
     print("Ensemble Acc1@ {:.3f}".format(val_top1_ensemble.avg), end='\t')
-    print("Ensemble Sub Acc1@ {:.3f}".format(val_top1_ensemble_sub.avg), end='\t')
-    print("Ensemble Sub2 Acc1@ {:.3f}".format(val_top1_ensemble_sub2.avg))
+    print("Ensemble Sub Acc1@ {:.3f}".format(val_top1_ensemble_sub_1.avg), end='\t')
+    print("Ensemble Sub2 Acc1@ {:.3f}".format(val_top1_ensemble_sub_2.avg))
