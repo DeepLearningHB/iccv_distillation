@@ -75,8 +75,12 @@ def main():
 
             test_top1_1_k.update(lmd_1_k_acc1[0], input_.size(0))
             test_top1_all.update(lmd_all_acc1[0], input_.size(0))
-
-
+        
+        print("[Test] Auxiliary Classifier Accuracies: ", end=' ')
+        for i in range(len(trained_models.LMD)):
+            print("Aux@%d: %.4f" % (i, test_top1_auxiliary[i].avg), end=' ')
+        print()
+        print("* [Test] [Ensemble All Accuracy: %.4f][** Ensemble 1_k Accuracy: %.4f]")
 
 
 if __name__ == "__main__":
