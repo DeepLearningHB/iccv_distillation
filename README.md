@@ -1,7 +1,7 @@
 # Marrying the Best of Both Knowledge: Ensemble-based Latent Matching with Softmax Representation Knowledge Distillation.
 
 ## Overview of our framework.
-<img src='./image/overview.png' width=1000>
+<img src='./images/overview.png' width=1000>
 
 
 ## Dataset
