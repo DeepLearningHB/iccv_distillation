@@ -12,9 +12,7 @@ Tiny ImageNet
 Facial Key-points
 
 ```
-# Download the pre-trained weights
-cd dataset
-bash download_datasets.sh
+# CIFAR-100 will be downloaded automatically when you run demo.py 
 cd ..
 # https://www.kaggle.com/c/facial-keypoints-detection/overview
 ```
@@ -25,9 +23,14 @@ cd ..
 The pretrained weights can be downloaded by running the file in dataset or [here](https://skku0-my.sharepoint.com/:f:/g/personal/byo7000_skku_edu/EoP8mWpbyDhNtIaZ9rBoPWcB5QRsinPBKwr0V18dHsUR8w?e=7oNCXY).
 
 ```
-# Download the pre-trained weights
+# Download the pre-trained baseline weights
 cd weights
-bash download_weights.sh
+bash download_baseline.sh
+cd ..
+
+# Download the pre-trained LSKD weights
+cd weights
+bash download_lskd_weight.sh
 cd ..
 ```
 
@@ -40,11 +43,9 @@ pip install -r requirements.txt
 ## Evaluation (editing)
 ```
 # Dataset and model weights need to be downloaded.
-# source and target dataset dir. i.e., StarGAN --> StyleGAN2
-# pretrained weight. i.e., efficientnet/stargan.pth.tar
-# t-gd pretrained weight. i.e., t-gd/efficientnet/star_to_style2.pth.tar
-python eval.py --source_dataset dataset/StarGAN_128 \
-                --target_dataset dataset/StyleGAN2_256 \
-                --pretrained_dir weights/pre-train/efficientnet/stargan.pth.tar \
-                --resume weights/t-gd/efficientnet/star_to_style2.pth.tar
+
+python demo.py  --model_s vgg11 \
+                --model_path weights/vgg19_vgg11_LSKD_demo.py \
+                --k 4 \
+                --cuda_visible_devices=0
 ```
