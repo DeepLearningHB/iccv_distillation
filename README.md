@@ -51,5 +51,5 @@ python demo.py  --model_s vgg11 \
 
 ```
 
-# Reference
+## Reference
 Many parts of our code are inpired by [Contrastive Representation Distillation](https://github.com/HobbitLong/RepDistiller)
