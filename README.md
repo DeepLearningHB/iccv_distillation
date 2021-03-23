@@ -20,12 +20,12 @@ cd ..
 
 
 ## Download pre-trained model weights
-The pretrained weights can be downloaded by running the file in dataset or [here](https://skku0-my.sharepoint.com/:f:/g/personal/byo7000_skku_edu/EoP8mWpbyDhNtIaZ9rBoPWcB5QRsinPBKwr0V18dHsUR8w?e=7oNCXY).
+The pretrained weights can be downloaded by running the file in dataset.
 
 ```
 # Download the pre-trained baseline weights
-cd weights
-bash download_baseline.sh
+cd download_weight
+sh download_baseline.sh
 cd ..
 
 # Download the pre-trained LSKD weights
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 ```
 
 
-## Evaluation (editing)
+## Evaluation
 ```
 # Dataset and model weights need to be downloaded.
 
@@ -49,5 +49,7 @@ python demo.py  --model_s vgg11 \
                 --k 4 \
                 --cuda_visible_devices=0
 
-# referenced by CRD
 ```
+
+# Reference
+Many parts of our code are inpired by [Contrastive Representation Distillation](https://github.com/HobbitLong/RepDistiller)
