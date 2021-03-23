@@ -52,4 +52,4 @@ python demo.py  --model_s vgg11 \
 ```
 
 ## Reference
-Many parts of our code are inpired by [Contrastive Representation Distillation](https://github.com/HobbitLong/RepDistiller)
+Many parts of our code are inspired by [Contrastive Representation Distillation](https://github.com/HobbitLong/RepDistiller)
