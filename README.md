@@ -6,10 +6,10 @@
 
 ## Dataset
 The datasets for our method can be downloaded in Torchvision, and shell file, which is created by us. 
-CIFAR-10
-CIFAR-100
-Tiny ImageNet
-Facial Key-points
+- CIFAR-10
+- CIFAR-100
+- Tiny ImageNet
+- Facial Key-points
 
 ```
 # CIFAR-100 will be downloaded automatically when you run demo.py 
