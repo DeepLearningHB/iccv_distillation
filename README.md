@@ -48,4 +48,6 @@ python demo.py  --model_s vgg11 \
                 --model_path weights/vgg19_vgg11_LSKD_demo.py \
                 --k 4 \
                 --cuda_visible_devices=0
+
+# referenced by CRD
 ```
