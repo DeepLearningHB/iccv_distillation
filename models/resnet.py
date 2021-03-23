@@ -99,6 +99,24 @@ class Bottleneck(nn.Module):
         else:
             return out
 
+class SepConv(nn.Module):
+
+    def __init__(self, channel_in, channel_out, kernel_size=3, stride=2, padding=1, affine=True):
+        super(SepConv, self).__init__()
+        self.op = nn.Sequential(
+            nn.Conv2d(channel_in, channel_in, kernel_size=kernel_size, stride=stride, padding=padding, groups=channel_in, bias=False),
+            nn.Conv2d(channel_in, channel_in, kernel_size=1, padding=0, bias=False),
+            nn.BatchNorm2d(channel_in, affine=affine),
+            nn.ReLU(inplace=False),
+            nn.Conv2d(channel_in, channel_in, kernel_size=kernel_size, stride=1, padding=padding, groups=channel_in, bias=False),
+            nn.Conv2d(channel_in, channel_out, kernel_size=1, padding=0, bias=False),
+            nn.BatchNorm2d(channel_out, affine=affine),
+            nn.ReLU(inplace=False),
+        )
+
+    def forward(self, x):
+        return self.op(x)
+
 
 class ResNet(nn.Module):
 
@@ -133,6 +151,65 @@ class ResNet(nn.Module):
             elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+        # self.attention1 = nn.Sequential(
+        #     SepConv(
+        #         channel_in=64 * block.expansion,
+        #         channel_out=64 * block.expansion
+        #     ),
+        #     nn.BatchNorm2d(64 * block.expansion),
+        #     nn.ReLU(),
+        #     nn.Upsample(scale_factor=2, mode='bilinear'),
+        #     nn.Sigmoid()
+        # )
+        # self.attention2 = nn.Sequential(
+        #     SepConv(
+        #         channel_in=128 * block.expansion,
+        #         channel_out=128 * block.expansion
+        #     ),
+        #     nn.BatchNorm2d(128 * block.expansion),
+        #     nn.ReLU(),
+        #     nn.Upsample(scale_factor=2, mode='bilinear'),
+        #     nn.Sigmoid()
+        # )
+        #
+        # self.scala1 = nn.Sequential(
+        #     SepConv(
+        #         channel_in=64 * block.expansion,
+        #         channel_out=128 * block.expansion
+        #     ),
+        #     SepConv(
+        #         channel_in=128 * block.expansion,
+        #         channel_out=256 * block.expansion
+        #     ),
+        #     SepConv(
+        #         channel_in=256 * block.expansion,
+        #         channel_out=512 * block.expansion
+        #     ),
+        #     nn.AvgPool2d(4, 4)
+        # )
+        #
+        # self.scala2 = nn.Sequential(
+        #     SepConv(
+        #         channel_in=128 * block.expansion,
+        #         channel_out=256 * block.expansion,
+        #     ),
+        #     SepConv(
+        #         channel_in=256 * block.expansion,
+        #         channel_out=512 * block.expansion,
+        #     ),
+        #     nn.AvgPool2d(4, 4)
+        # )
+        # self.scala3 = nn.Sequential(
+        #     SepConv(
+        #         channel_in=256 * block.expansion,
+        #         channel_out=512 * block.expansion,
+        #     ),
+        #     nn.AvgPool2d(4, 4)
+        # )
+        # self.fc1 = nn.Linear(512 * block.expansion, num_classes)
+        # self.fc2 = nn.Linear(512 * block.expansion, num_classes)
+        # self.fc3 = nn.Linear(512 * block.expansion, num_classes)
+
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -175,31 +252,90 @@ class ResNet(nn.Module):
 
         return [bn1, bn2, bn3]
 
-    def forward(self, x, is_feat=False, preact=False):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)  # 32x32
-        f0 = x
+    def forward(self, x, is_feat=False, preact=False, attention=None, additional_list=None):
+        # feature_list = []
+        if isinstance(additional_list, list):
+            x = self.conv1 (x)
+            x = self.bn1 (x)
+            x = self.relu (x)  # 32x32
 
-        x, f1_pre = self.layer1(x)  # 32x32
-        f1 = x
-        x, f2_pre = self.layer2(x)  # 16x16
-        f2 = x
-        x, f3_pre = self.layer3(x)  # 8x8
-        f3 = x
+            f0 = additional_list[0]
 
-        x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        f4 = x
-        x = self.fc(x)
+            x, f1_pre = self.layer1(f0)
+            f1 = additional_list[1]
+            x, f2_pre = self.layer2(f1)
+            f2 = additional_list[2]
+            x, f3_pre = self.layer3(f2)
+            f3 = additional_list[3]
 
-        if is_feat:
-            if preact:
-                return [f0, f1_pre, f2_pre, f3_pre, f4], x
+            x = self.avgpool(f3)
+            x = x.view(x.size(0), -1)
+            f4 = x
+            x = self.fc(x)
+
+            if is_feat:
+                if preact:
+                    return [f0, f1_pre, f2_pre, f3_pre, f4], x
+                else:
+                    return [f0, f1, f2, f3, f4], x
             else:
-                return [f0, f1, f2, f3, f4], x
+                return x
+        if attention is None:
+            x = self.conv1(x)
+            x = self.bn1(x)
+            x = self.relu(x)  # 32x32
+            f0 = x
+
+            x, f1_pre = self.layer1(x)  # 32x32
+            f1 = x
+            x, f2_pre = self.layer2(x)  # 16x16
+            f2 = x
+            x, f3_pre = self.layer3(x)  # 8x8
+            f3 = x
+
+            x = self.avgpool(x)
+            x = x.view(x.size(0), -1)
+            f4 = x
+            x = self.fc(x)
+
+            if is_feat:
+                if preact:
+                    return [f0, f1_pre, f2_pre, f3_pre, f4], x
+                else:
+                    return [f0, f1, f2, f3, f4], x
+            else:
+                return x
         else:
-            return x
+            x = self.conv1(x)
+            x = self.bn1(x)
+            x = self.relu(x)  # 32x32
+
+            x = x * attention[0]
+            f0 = x
+            x, f1_pre = self.layer1(x)  # 32x32
+
+            x = x * attention[1]
+            f1 = x
+            x, f2_pre = self.layer2(x)  # 16x16
+
+            x = x * attention[2]
+            f2 = x
+            x, f3_pre = self.layer3(x)  # 8x8
+
+            x = x * attention[3]
+            f3 = x
+            x = self.avgpool(x)
+            x = x.view(x.size(0), -1)
+            f4 = x
+            x = self.fc(x)
+
+            if is_feat:
+                if preact:
+                    return [f0, f1_pre, f2_pre, f3_pre, f4], x
+                else:
+                    return [f0, f1, f2, f3, f4], x
+            else:
+                return x
 
 
 def resnet8(**kwargs):
@@ -247,7 +383,7 @@ if __name__ == '__main__':
 
     for f in feats:
         print(f.shape, f.min().item())
-    print(logit.shape)
+    print([f.shape for f in logit])
 
     for m in net.get_bn_before_relu():
         if isinstance(m, nn.BatchNorm2d):
