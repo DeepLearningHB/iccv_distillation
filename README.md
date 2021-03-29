@@ -13,7 +13,6 @@ The datasets for our method can be downloaded in Torchvision, and shell file, wh
 
 ```
 # CIFAR-100 will be downloaded automatically when you run demo.py 
-cd ..
 # https://www.kaggle.com/c/facial-keypoints-detection/overview
 ```
 
